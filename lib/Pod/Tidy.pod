@@ -1,0 +1,181 @@
+=pod
+
+=head1 NAME
+
+Pod::Tidy - reformat Pod documents without effecting other text or code
+
+=head1 SYNOPSIS
+
+    use Pod::Tidy qw( tidy_files tidy_filehandle );
+
+    my $processed = Pod::Tidy::tidy_files(
+        files       => \@list,
+        recursive   => $recursive,
+        verbose     => $verbose,
+        inplace     => $inplace,
+        nobackup    => $nobackup,
+    );
+
+    Pod::Tidy::tidy_filehandle($input);
+
+=head1 DESCRIPTION
+
+This module provides the I<heavy lifting> need by the C<podtidy> utility
+although the API should be general enough that it can be used directly.
+
+=head1 USAGE
+
+=head2 Import Parameters
+
+This module accepts no arguments to it's C<import> method and exports no
+I<symbols>.
+
+=head2 Exportable Subroutines
+
+=over 4
+
+=item * tidy_files( ... )
+
+Accepts a mandatory hash.
+
+    my $processed = Pod::Tidy::tidy_files(
+        files       => \@list,
+        recursive   => $recursive,
+        verbose     => $verbose,
+        inplace     => $inplace,
+        nobackup    => $nobackup,
+    );
+
+=over 4
+
+=item * files
+
+An array ref to a list of files and/or directories.
+
+=item * recursive
+
+Accepts C<undef>, C<0>, or C<1>.  If set to C<1> any directories provided to
+the C<files> key will be recursively expanded.  Defaults to C<undef>
+
+This key is optional.
+
+=item * verbose
+
+Accepts C<undef>, C<0>, or C<1>.  C<1> enables verbose warnings. Defaults to
+C<undef>.
+
+This key is optional.
+
+=item * inplace
+
+Accepts C<undef>, C<0>, or C<1>.  C<1> enables I<in place> reformatting of
+files.  Updated files will be backed up unless the C<nobackup> key is set.  The
+C<mtime> of the file is guarenteed not to be changed unless formating changes
+did occur.  Defaults to C<undef>.
+
+This key is optional.
+
+=item * nobackup
+
+Accepts C<undef>, C<0>, or C<1>.  If set to C<1> files being reformatted in
+place will not be backed up.  Defaults to C<undef>.
+
+This key is optional.
+
+=back
+
+Before processing a file it is checked for:
+
+=over 4
+
+=item * correct access permissions
+
+=item * containing Pod
+
+=item * legal Pod syntax
+
+=back
+
+Any file failing to meet those criteria will I<not> be processed.
+
+Returns a count of processed files or C<undef> if no files could be processed.
+
+=item * tidy_filehandle($input)
+
+Accepts an open filehandle.  Data from the filehandle is processed as it is
+read so this subroutine can be used to filter large amounts of data.  Because
+of this behavior the input can not be checked in advance to verify a) That it's
+actually Pod and b) that the Pod document uses only valid Pod syntax.  Output
+is set to C<STDOUT>.  Returns nothing.
+
+=back
+
+=head2 Internal Subroutines
+
+These subroutines are not exportable.
+
+=over 4
+
+=item * backup_file
+
+=item * build_pod_queue
+
+=item * process_pod_queue
+
+=item * valid_pod_syntax
+
+=back
+
+=head1 DEVELOPER NOTES
+
+The C<tidy_files()> subroutine does a number of highly inefficient things. Each
+file is opened and closed at least 3 different times as it is passed through a
+number of different modules to see if it meets the processing criteria.  This
+shouldn't be a major performance issue with an modern OS's VM subsystem but it
+still leaves much to be desired.  When doing C<inplace> file reformatting a
+complete copy of the original file and the updated file and held in memory for
+comparison.  Thus you are limited to reformatting Pod documents C< < (
+available_system_memory / 2 )>.
+
+=head1 BUGS
+
+Due to a bug in the version of C<Pod::Find::contains_pod> bundled with
+Pod::Parser 1.33, Pod containing files will not be detetect if the only
+C<=[foo]N> directive is on the first line of the file.  For example:
+
+    =head1 foo
+    
+    foobarbaz
+
+    =cut
+
+Would not be detected unless there was a newline before C<=head1 foo>.  See
+CPAN bug #14871 for a patch to correct C<Pod::Find>.
+
+=head1 CREDITS
+
+Just me, myself, and I.
+
+=head1 SUPPORT
+
+Please contact the author directly via e-mail.
+
+=head1 AUTHOR
+
+Joshua Hoblitt C<jhoblitt@cpan.org>
+
+=head1 COPYRIGHT
+
+Copyright (c) 2005  Joshua Hoblitt. All rights reserved. This program is free
+software; you can redistribute it and/or modify it under the same terms as Perl
+itself.
+
+The full text of the licenses can be found in the F<LICENSE> file included with
+this module, or in L<perlartistic> and L<perlgpl> Pods as supplied with Perl
+5.8.1 and later.
+
+=head1 SEE ALSO
+
+L<Pod::Wrap::Pretty>, L<Pod::Wrap>, L<Perl::Tidy>
+
+=cut
