@@ -1,5 +1,16 @@
 Revision history for Perl module Pod::Tidy
 
+0.05 Tue Oct  4 15:22:36 HST 2005
+    - remove build_req on Test::Pod
+    - add recommends Test::Distribution
+    - Pod::Tidy VERSION to '0.05'
+
+0.04 Tue Oct  4 15:11:04 HST 2005
+    - add Makefile.PL
+    - work around Module::Build stripping the execute bit from scripts/podtidy
+      when making a tarball in t/09_podtidy.t
+    - Pod::Tidy VERSION to '0.04'
+
 0.03 Tue Oct  4 14:44:18 HST 2005
     - document podtidy's --Ignore option
     - Pod::Tidy & podtidy VERSION to '0.03'

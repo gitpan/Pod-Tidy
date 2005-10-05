@@ -2,7 +2,7 @@
 
 # Copyright (C) 2005  Joshua Hoblitt
 #
-# $Id: 09_podtidy.t,v 1.3 2005/10/04 21:47:02 jhoblitt Exp $
+# $Id: 09_podtidy.t,v 1.4 2005/10/05 01:09:31 jhoblitt Exp $
 
 use strict;
 use warnings;
@@ -16,7 +16,7 @@ use Pod::Tidy;
 use Test::Cmd;
 use Test::Pod::Tidy;
 
-my $cmd = Test::Cmd->new(prog => 'scripts/podtidy', workdir => '');
+my $cmd = Test::Cmd->new(prog => "$^X scripts/podtidy", workdir => '');
 isa_ok($cmd, 'Test::Cmd');
 
 {
