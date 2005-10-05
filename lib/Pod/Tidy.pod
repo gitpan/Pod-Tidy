@@ -10,6 +10,7 @@ Pod::Tidy - reformat Pod documents without effecting other text or code
 
     my $processed = Pod::Tidy::tidy_files(
         files       => \@list,
+        ignore      => [qr/foo/, qr/bar/],
         recursive   => $recursive,
         verbose     => $verbose,
         inplace     => $inplace,
@@ -40,6 +41,7 @@ Accepts a mandatory hash.
 
     my $processed = Pod::Tidy::tidy_files(
         files       => \@list,
+        ignore      => [qr/foo/, qr/bar/],
         recursive   => $recursive,
         verbose     => $verbose,
         inplace     => $inplace,
@@ -51,6 +53,16 @@ Accepts a mandatory hash.
 =item * files
 
 An array ref to a list of files and/or directories.
+
+=item * ignore
+
+An array ref to regex objects that are used to reject files and/or directories.
+Each pattern is tried for a match against (in order) the absolute file path,
+the relative file path (canonical), and the basename.  In the case of
+directories, the "basename" is considered to be the right most path component.
+For example, the "basename" of C</foo/bar/baz/> would be to be C<baz>.
+
+This key is optional.
 
 =item * recursive
 
@@ -118,6 +130,8 @@ These subroutines are not exportable.
 
 =item * backup_file
 
+=item * base
+
 =item * build_pod_queue
 
 =item * process_pod_queue
@@ -140,7 +154,7 @@ available_system_memory / 2 )>.
 =head1 BUGS
 
 Due to a bug in the version of C<Pod::Find::contains_pod> bundled with
-L<Pod::Parser> 1.33, Pod containing files will not be detetect if the only
+L<Pod::Parser> 1.33, Pod containing files will not be detect if the only
 C<=[foo]N> directive is on the first line of the file.  For example:
 
     =head1 foo
