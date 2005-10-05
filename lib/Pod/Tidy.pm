@@ -1,6 +1,6 @@
 # Copyright (C) 2005  Joshua Hoblitt
 #
-# $Id: Tidy.pm,v 1.11 2005/10/02 22:14:40 jhoblitt Exp $
+# $Id: Tidy.pm,v 1.15 2005/10/05 00:20:00 jhoblitt Exp $
 
 package Pod::Tidy;
 
@@ -8,7 +8,7 @@ use strict;
 use warnings FATAL => qw( all );
 
 use vars qw( $VERSION );
-$VERSION = '0.01';
+$VERSION = '0.02';
 
 use Fcntl ':flock';
 use IO::String;
@@ -27,6 +27,7 @@ sub tidy_files
 
     my $queue = build_pod_queue(
         files       => $p{files},
+        ignore      => $p{ignore},
         recursive   => $p{recursive},
         verbose     => $p{verbose},
     );
@@ -118,11 +119,20 @@ sub build_pod_queue
     # deref once
     my $verbose     = $p{verbose};
     my $recursive   = $p{recursive};
+    my $ignore      = $p{ignore};
 
     my @queue;
-    foreach my $item (@{ $p{files} }) {
+        PERITEM: foreach my $item (@{ $p{files} }) {
         # FIXME do we need to add symlink handling options?
 
+        foreach my $pattern (@{ $ignore }) {
+            if ($item =~ $pattern) {
+                warn "$0: omitting file \`$item\': mattes ignore pattern\n"
+                    if $verbose;
+                next PERITEM;
+            }
+        }
+        
         # is it a file?
         if (-f $item) {
             # only check if we can read the file, we don't need to be able to
@@ -164,13 +174,13 @@ sub build_pod_queue
                 opendir(my $dir, $item) or warn "can't open dir: $!" && next;
                 my @files = grep !/^\.{1,2}$/, readdir($dir);
                 @files = map { "$item/$_" } @files;
-                push(@queue, @{
-                    build_pod_queue(
-                        files       => \@files,
-                        verbose     => $verbose,
-                        recursive   => $recursive
-                    ),
-                });
+                my $pod_list = build_pod_queue(
+                    files       => \@files,
+                    verbose     => $verbose,
+                    recursive   => $recursive,
+                    ignore      => $ignore,
+                );
+                push(@queue, @{ $pod_list }) if $pod_list;
             } else {
                 # ignoring $item, recursion not enabled
             warn "$0: omitting direcotry \`$item\': recursion is not enabled\n" 
