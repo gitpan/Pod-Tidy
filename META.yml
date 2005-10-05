@@ -1,6 +1,6 @@
 ---
 name: Pod-Tidy
-version: 0.02
+version: 0.03
 author: ~
 abstract: ~
 license: gpl
@@ -17,7 +17,7 @@ build_requires:
 provides:
   Pod::Tidy:
     file: lib/Pod/Tidy.pm
-    version: 0.02
+    version: 0.03
   Pod::Wrap::Pretty:
     file: lib/Pod/Wrap/Pretty.pm
     version: 0.01

@@ -1,6 +1,6 @@
 # Copyright (C) 2005  Joshua Hoblitt
 #
-# $Id: Tidy.pm,v 1.15 2005/10/05 00:20:00 jhoblitt Exp $
+# $Id: Tidy.pm,v 1.16 2005/10/05 00:43:56 jhoblitt Exp $
 
 package Pod::Tidy;
 
@@ -8,7 +8,7 @@ use strict;
 use warnings FATAL => qw( all );
 
 use vars qw( $VERSION );
-$VERSION = '0.02';
+$VERSION = '0.03';
 
 use Fcntl ':flock';
 use IO::String;
