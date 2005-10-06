@@ -1,9 +1,9 @@
 ---
 name: Pod-Tidy
-version: 0.06
+version: 0.07
 author: ~
 abstract: ~
-license: gpl
+license: perl
 requires:
   File::Copy: 0
   IO::String: 0
@@ -19,7 +19,7 @@ build_requires:
 provides:
   Pod::Tidy:
     file: lib/Pod/Tidy.pm
-    version: 0.06
+    version: 0.07
   Pod::Wrap::Pretty:
     file: lib/Pod/Wrap/Pretty.pm
     version: 0.02

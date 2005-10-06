@@ -21,7 +21,7 @@ Pod::Tidy - reformat Pod documents without effecting other text or code
 
 =head1 DESCRIPTION
 
-This module provides the I<heavy lifting> need by the C<podtidy> utility
+This module provides the I<heavy lifting> needed by the C<podtidy> utility
 although the API should be general enough that it can be used directly.
 
 =head1 USAGE
@@ -142,6 +142,8 @@ These subroutines are not exportable.
 
 =head1 DEVELOPER NOTES
 
+=head2 Efficiency concerns
+
 The C<tidy_files()> subroutine does a number of highly inefficient things. Each
 file is opened and closed at least 3 different times as it is passed through a
 number of different modules to see if it meets the processing criteria.  This
@@ -151,10 +153,12 @@ complete copy of the original file and the updated file and held in memory for
 comparison.  Thus you are limited to reformatting Pod documents C< < (
 available_system_memory / 2 )>.
 
-=head1 BUGS
+=head1 GOTCHAS
 
-Due to a bug in the version of C<Pod::Find::contains_pod> bundled with
-L<Pod::Parser> 1.33, Pod containing files will not be detect if the only
+=head2 Pod files not identified
+
+Due to a bug in the version of L<Pod::Find/contains_pod> bundled with
+L<Pod::Parser> 1.33, Pod containing files will not be detected if the only
 C<=[foo]N> directive is on the first line of the file.  For example:
 
     =head1 foo
@@ -164,8 +168,74 @@ C<=[foo]N> directive is on the first line of the file.  For example:
     =cut
 
 Would not be detected unless there was a newline before C<=head1 foo>.  See
-CPAN bug #14871 for a patch to correct C<Pod::Find>.  This should be fixed in
+CPAN bug #14871 for a patch to correct L<Pod::Find>.  This should be fixed in
 version 1.34 of L<Pod::Parser>
+
+=head2 Mangled verbatim blocks
+
+Unfortunately, the C<perldoc> utility doesn't follow L<perlpodspec> for what it
+considers a verbatim block.  As far as C<perldoc> is concerned anything line
+that begins with whitespace is in a verbatim block.  While the Pod spec
+requires that all blocks are separated by a blank line.
+
+Consider this example:
+
+    =head1 What Would Brian Boitano Do?
+
+    What would Brian Boitano do
+    If he was here right now?
+    He'd make a plan and he'd follow through
+    That's what Brian Boitano'd do
+        When Brian Boitano was in the olympics
+        Skating for the gold
+        He'd do sound cows and a triple relux
+        wearin a blindfold
+
+    =cut
+
+C<perldoc> incorrectly considers the second paragraph to be indented and would
+display it as one might be expecting.  However, C<podtidy> would turn it into
+this:
+
+    =head1 What Would Brian Boitano Do?
+
+    What would Brian Boitano do If he was here right now?  He'd make a plan and
+    he'd follow through That's what Brian Boitano'd do     When Brian Boitano was
+    in the olympics     Skating for the gold     He'd do sound cows and a triple
+    relux     wearin a blindfold
+
+    =cut
+
+If a single black line is added between the two paragraphs as required by
+L<perlpodspec>, the original document would look like this:
+
+    =head1 What Would Brian Boitano Do?
+
+    What would Brian Boitano do
+    If he was here right now?
+    He'd make a plan and he'd follow through
+    That's what Brian Boitano'd do
+
+        When Brian Boitano was in the olympics
+        Skating for the gold
+        He'd do sound cows and a triple relux
+        wearin a blindfold
+
+    =cut
+
+Then the result from C<podtidy> would be nice and... well... I<tidy>.
+
+    =head1 What Would Brian Boitano Do?
+
+    What would Brian Boitano do If he was here right now? He'd make a plan and he'd
+    follow through That's what Brian Boitano'd do
+
+        When Brian Boitano was in the olympics
+        Skating for the gold
+        He'd do sound cows and a triple relux
+        wearin a blindfold
+
+    =cut
 
 =head1 CREDITS
 
@@ -191,6 +261,6 @@ this module, or in L<perlartistic> and L<perlgpl> Pods as supplied with Perl
 
 =head1 SEE ALSO
 
-L<Pod::Wrap::Pretty>, L<Pod::Wrap>, L<Perl::Tidy>
+L<podtidy>, L<Pod::Wrap::Pretty>, L<podwrap>, L<Pod::Wrap>, L<Perl::Tidy>
 
 =cut

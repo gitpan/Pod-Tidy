@@ -1,6 +1,6 @@
 # Copyright (C) 2005  Joshua Hoblitt
 #
-# $Id: Tidy.pm,v 1.20 2005/10/05 09:53:01 jhoblitt Exp $
+# $Id: Tidy.pm,v 1.21 2005/10/06 09:31:50 jhoblitt Exp $
 
 package Pod::Tidy;
 
@@ -8,7 +8,7 @@ use strict;
 use warnings FATAL => qw( all );
 
 use vars qw( $VERSION );
-$VERSION = '0.06';
+$VERSION = '0.07';
 
 use Fcntl ':flock';
 use File::Basename qw( basename dirname );
