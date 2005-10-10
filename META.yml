@@ -1,25 +1,26 @@
 ---
 name: Pod-Tidy
-version: 0.07
+version: 0.08
 author: ~
 abstract: ~
 license: perl
 requires:
+  Encode: 0
+  Encode::Newlines: 0.03
   File::Copy: 0
   IO::String: 0
   Pod::Find: 0
   Pod::Simple: 0
   Pod::Wrap: 0
+  Test::Cmd: 1.05
   Text::Glob: 0.06
   Text::Wrap: 0
 recommends:
   Test::Distribution: 1.22
-build_requires:
-  Test::Cmd: 0
 provides:
   Pod::Tidy:
     file: lib/Pod/Tidy.pm
-    version: 0.07
+    version: 0.08
   Pod::Wrap::Pretty:
     file: lib/Pod/Wrap/Pretty.pm
     version: 0.02

@@ -57,7 +57,7 @@ __END__
 
 =head1 NAME
 
-podtidy - a reformatting Pod Processor
+podtidy - reformat Pod documents without affecting other text or code
 
 =head1 SYNOPSIS
 
@@ -80,7 +80,7 @@ backup of the input file to be made and the original file to overwritten with a
 reformatted version.  It should be noted that only files that are actually
 having there format changed will to written to.  When C<--inplace> is combined
 with C<--nobackup> the backup of the original file is omitted.  If
-<--recursive> is specified then any directory names in <filelist> will be
+C<--recursive> is specified then any directory names in <filelist> will be
 recursively expanded.  File and directories may be explicitly omitted from
 processing by using the C<--Ignore> option and specifying a Perl5 compatible
 regex.  Multiple C<--Ignore> options may be specified.  Lastly, the
@@ -159,6 +159,22 @@ parts of a Pod document will be added in the future.  C<podwrap> is also
 missing a couple of other features that C<podtidy> provides for convenience,
 including:
 
+=head2 Subversion Working Copies
+
+When using C<podtidy> on a C<svn> I<Working Copy> it's important to remember
+that copies of all working files are stored under a directory named F<.svn>,
+including copies of Pod files.  If you use C<podtidy>'s C<--recursive> option
+I<Be Sure> that you don't accidentally process a F<.svn> directory. For
+example:
+
+    podtidy --recursive --inplace --nobackup --Ignore .svn docs
+
+Note that because any Pod files are already under revision control that it's
+completely safe to use the C<--nobackup> flag.  Also, the above example may be
+shorted to just:
+
+    podtidy -rin -I .svn docs
+
 =over 4
 
 =item * recursive file/directory processing
@@ -174,9 +190,17 @@ modified
 
 =back
 
+=head2 Efficiency concerns
+
+See L<Pod::Tidy/Efficiency concerns>.
+
+=head1 GOTCHAS
+
+See L<Pod::Tidy/GOTCHAS>.
+
 =head1 CREDITS
 
-Just me, myself, and I.
+See L<Pod::Tidy/CREDITS>.
 
 =head1 SUPPORT
 

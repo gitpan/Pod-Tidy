@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-Pod::Tidy - reformat Pod documents without effecting other text or code
+Pod::Tidy - a reformatting Pod Processor
 
 =head1 SYNOPSIS
 
@@ -174,9 +174,9 @@ version 1.34 of L<Pod::Parser>
 =head2 Mangled verbatim blocks
 
 Unfortunately, the C<perldoc> utility doesn't follow L<perlpodspec> for what it
-considers a verbatim block.  As far as C<perldoc> is concerned anything line
-that begins with whitespace is in a verbatim block.  While the Pod spec
-requires that all blocks are separated by a blank line.
+considers a verbatim block.  As far as C<perldoc> is concerned, any line that
+begins with whitespace is in a verbatim block.  While the Pod spec requires
+that all blocks are separated by a blank line.
 
 Consider this example:
 
@@ -206,7 +206,7 @@ this:
 
     =cut
 
-If a single black line is added between the two paragraphs as required by
+If a single blank line is added between the two paragraphs as required by
 L<perlpodspec>, the original document would look like this:
 
     =head1 What Would Brian Boitano Do?
@@ -239,7 +239,16 @@ Then the result from C<podtidy> would be nice and... well... I<tidy>.
 
 =head1 CREDITS
 
-Just me, myself, and I.
+Larry Denneau C<denneau@ifa.hawaii.edu> reported test failures caused by
+L<Module::Build> stripping the execute bit from F<scripts/podtidy>.
+
+Grant McLean C<grant@mclean.net.nz> caught a grammatical error in the
+documentation.
+
+Michael Cartmell C<Michael.Cartmell@thomson.com> provided some grammatical
+corrections and a patch to fix C<Pod::Tidy::build_pod_queue()> tests on Win32,
+reporting test failures on Win32 caused by differing newline encodings, and
+reporting L<CPANPLUS> playing badly with L<Module::Build>'s C<build_requires>.
 
 =head1 SUPPORT
 

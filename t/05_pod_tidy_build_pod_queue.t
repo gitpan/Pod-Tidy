@@ -2,7 +2,7 @@
 
 # Copyright (C) 2005  Joshua Hoblitt
 #
-# $Id: 05_pod_tidy_build_pod_queue.t,v 1.5 2005/10/05 00:20:03 jhoblitt Exp $
+# $Id: 05_pod_tidy_build_pod_queue.t,v 1.6 2005/10/09 06:47:19 jhoblitt Exp $
 
 use strict;
 use warnings FATAL => qw( all );
@@ -84,7 +84,7 @@ use Test::Pod::Tidy;
     my $queue = Pod::Tidy::build_pod_queue(
         files       => [$dir],
         recursive   => 1,
-        ignore      => [qr/$tmp_valid/],
+        ignore      => [qr/\Q$tmp_valid\E/],
     );
 
     is_deeply($queue, [$tmp_valid2->filename], "ignore 1 pattern");
@@ -109,7 +109,7 @@ use Test::Pod::Tidy;
     my $queue = Pod::Tidy::build_pod_queue(
         files       => [$dir],
         recursive   => 1,
-        ignore      => [qr/$tmp_valid/, qr/$tmp_valid2/],
+        ignore      => [qr/\Q$tmp_valid\E/, qr/\Q$tmp_valid2\E/],
     );
 
     is_deeply($queue, [$tmp_valid3->filename], "ignore 2 pattern");
