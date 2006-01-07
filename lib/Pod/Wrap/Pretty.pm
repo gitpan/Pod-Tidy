@@ -1,13 +1,13 @@
 # Copyright (C) 2005  Joshua Hoblitt
 #
-# $Id: Pretty.pm,v 1.2 2005/10/05 03:34:11 jhoblitt Exp $
+# $Id: Pretty.pm,v 1.4 2006/01/07 10:54:24 jhoblitt Exp $
 
 package Pod::Wrap::Pretty;
 
 use strict;
 
 use vars qw( $VERSION );
-$VERSION = '0.02';
+$VERSION = '0.03';
 
 use base qw( Pod::Wrap );
 
@@ -27,9 +27,9 @@ sub textblock
     # is it a plain text paragraph?
     if ($text !~ /^=/mg) {
         # it is - remove all but the last newline so line the breaks are redone
-        $text =~ s/\n(?!\Z)/ /g;
+        $text =~ s|$/(?!\Z)| |g;
         # trim whitespace from the end of the string
-        $text =~ s/\s*\z/\n/g;
+        $text =~ s|\s*\z|$/|g;
     }
 
     $self->SUPER::textblock($text, @_);
