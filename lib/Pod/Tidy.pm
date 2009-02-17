@@ -1,14 +1,14 @@
 # Copyright (C) 2005  Joshua Hoblitt
 #
-# $Id: Tidy.pm,v 1.24 2006/01/07 11:01:53 jhoblitt Exp $
+# $Id: Tidy.pm,v 1.27 2009/02/17 21:49:37 jhoblitt Exp $
 
 package Pod::Tidy;
 
 use strict;
 use warnings FATAL => qw( all );
 
-use vars qw( $VERSION );
-$VERSION = '0.09';
+use vars qw( $VERSION $columns );
+$VERSION = '0.10';
 
 use Fcntl ':flock';
 use File::Basename qw( basename dirname );
@@ -18,6 +18,11 @@ use File::Copy qw( cp );
 use Pod::Find qw( contains_pod );
 use Pod::Simple;
 use Pod::Wrap::Pretty;
+use Text::Wrap qw($columns);
+
+# Text::Wrap's default is 76, we are using 80 to maintain compatability with
+# Pod::Tidy <= 0.09
+$columns = 80;
 
 use vars qw( $BACKUP_POSTFIX);
 # used by backup_file
@@ -26,6 +31,8 @@ $BACKUP_POSTFIX = "~";
 sub tidy_files
 {
     my %p = @_;
+
+    $columns = $p{columns} if $p{columns};
 
     my $queue = build_pod_queue(
         files       => $p{files},
